@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: showmeip
+spec:
+  selector:
+    matchLabels:
+      run: showmeip
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: showmeip
+    spec:
+      containers:
+      - name: showmeip
+        image: mendhak/http-https-echo
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: showmeip
+  labels:
+    run: showmeip
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 81
+    targetPort: 80
+  selector:
+    run: showmeip
